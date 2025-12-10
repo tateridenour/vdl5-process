@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script
+			crossorigin
+			src="https://unpkg.com/react@18/umd/react.development.js"
+		></script>
+		<script
+			crossorigin
+			src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+		></script>
+		<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+		<link href="style.css" rel="stylesheet" />
+		<title>Tate Ridenour - VDL5 Portfolio</title>
+	</head>
+
+	<body>
+		<div id="navbar">
+			<p>Tate Ridenour VDL5</p>
+
+			<div id="navbar__links">
+				<a onclick="setPortfolio('infographic')">Infographic</a>
+				<a onclick="setPortfolio('pos')">POS Display</a>
+				<a onclick="setPortfolio('book')">Book Cover</a>
+			</div>
+		</div>
+
+		<div id="portfolio"></div>
+
+		<script type="text/babel">
+			let setPortfolio;
+
+			const sketchLocation = "images/sketches/";
+
+			const portfolioItems = {
+				infographic: {
+					title: 'Top 100 Dance Dance Revolution Songs\n24" x 36"',
+					img_src: "images/works/01_infographic.png",
+					paragraph: `An infographic that showcases the top 100 downloaded songs in Dance Dance Revolution. It is targeted towards those who have heard of Dance Dance Revolution, but may not be aware of specific songs or games.
+					The chronological format serves two main purposes: It breaks up the information into smaller groups to be more digestible, and it forms a stronger shockwave pattern emanating from the shoe.
+					The round bar graph was specifically chosen to allow for the inclusion of all the information. I had calculated beforehand that there would not be enough room on the page were the text to be laid out straight from top to bottom. This solution turned out flashy, unique, and useful.
+					The video game series's UI design choices, and early 2000s design in general, informed things like the color palette (colorful patterns on beige) and typeface choice (technical sans-serifs, stretched type).`,
+					sketch_array: [
+						"01_info-01.jpg",
+						"01_info-02.jpg",
+						"01_info-03.jpg",
+						"01_info-04.jpg",
+					],
+				},
+				pos: {
+					title: "ROWDY! POS Display",
+					img_src: "images/works/02_posdisplay.png",
+					paragraph: `A POS display that advertises and showcases the mocktail brand \"ROWDY!\". It is targeted towards individuals turned away by the health food branding of other mocktails.
+					The shape of the box was directly incorporated onto the structure. This decision saves time, unifies the design, and uses a proven element in a new and unique way.
+					The layout was made to showcase the most eye-catching graphics front-and-center. The dimensions were calculated to make sure the wolf head would appear human-sized and at eye level.`,
+					sketch_array: ["02_01.jpg", "02_02.jpg", "02_03.jpg"],
+				},
+				book: {
+					title: 'A-Z Road Atlas: Great Britain\n4" x 6"',
+					img_src: "images/works/03_bookcover.png",
+					paragraph: `A book cover for a road atlas. It is targeted towards higher income customers who see a road atlas as a more peaceful and mindful alternative to GPS.
+					The cover intentionally avoids a composition of purely landmarks in favor of houses that are more commonly seen in Britain, making the design more down-to-earth.`,
+					sketch_array: ["03_01.jpg"],
+				},
+			};
+
+			function SketchGrid({ sketch_array }) {
+				const gridTemplateRows =
+					"repeat(" + sketch_array.length + ", 1fr)"; // example: "repeat(4, 1fr)"
+				return (
+					<div
+						className="portfolio-display__sketches"
+						style={{ gridTemplateRows: gridTemplateRows }}
+					>
+						{sketch_array.map((src, i) => (
+							<div className="sketch-item" key={i}>
+								<img src={sketchLocation + src} />
+							</div>
+						))}
+					</div>
+				);
+			}
+
+			function PortfolioDisplay({
+				title,
+				img_src,
+				paragraph,
+				sketch_array,
+			}) {
+				title = title.split("\n").map((line, index) => (
+					<React.Fragment key={index}>
+						{line}
+						<br />
+					</React.Fragment>
+				));
+				paragraph = paragraph
+					.split("\n")
+					.filter((line) => line.trim() !== "") // optional: skip empty lines
+					.map((line, index) => <p key={index}>{line}</p>);
+				return (
+					<div className="portfolio-display">
+						<img src={img_src} />
+						<SketchGrid sketch_array={sketch_array} />
+						<div className="portfolio-display__information">
+							<i>{title}</i>
+							<p className="portfolio-display__information__paragraph">
+								{paragraph}
+							</p>
+						</div>
+					</div>
+				);
+			}
+
+			function App() {
+				const [current, setCurrent] = React.useState("infographic");
+
+				setPortfolio = setCurrent;
+
+				const data = portfolioItems[current];
+
+				return (
+					<div>
+						<PortfolioDisplay
+							title={data.title}
+							img_src={data.img_src}
+							paragraph={data.paragraph}
+							sketch_array={data.sketch_array}
+						/>
+					</div>
+				);
+			}
+
+			var container = ReactDOM.createRoot(
+				document.getElementById("portfolio")
+			);
+
+			container.render(<App />);
+		</script>
+	</body>
+</html>
